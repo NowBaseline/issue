@@ -1,52 +1,27 @@
-<!DOCTYPE html>
-<html>
-
+<html ng-app="myapp">
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Issue : " />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Issue</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min.js'></script>
+    <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+    <script src='https://cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js'></script>
   </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/NowBaseline/issue">View on GitHub</a>
-
-          <h1 id="project_title">Issue</h1>
-          <h2 id="project_tagline"></h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/NowBaseline/issue/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/NowBaseline/issue/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+  <body ng-controller="MyController">
+    <div id="messagesDiv">
+      <div ng-repeat="msg in messages"><em>{{msg.from}}</em>: {{msg.body}}</div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="issue" class="anchor" href="#issue"><span class="octicon octicon-link"></span></a>issue</h1>
-
-<p><a href="http://nowbaseline.github.io/issue">http://nowbaseline.github.io/issue</a></p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Issue maintained by <a href="https://github.com/NowBaseline">NowBaseline</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
+    <input type="text" ng-model="name" placeholder="Name">
+    <input type="text" ng-model="msg" ng-keydown="addMessage($event)" placeholder="Message...">
+    <script>
+      var app = angular.module("myapp", ["firebase"]);
+      function MyController($scope, angularFire) {
+        var ref = new Firebase("https://qx9opy63dzd.firebaseio-demo.com/");
+        $scope.messages = [];
+        angularFire(ref, $scope, "messages");
+        $scope.addMessage = function(e) {
+          if (e.keyCode != 13) return;
+          $scope.messages.push({from: $scope.name, body: $scope.msg});
+          $scope.msg = "";
+        };
+      }
+    </script>
   </body>
 </html>
